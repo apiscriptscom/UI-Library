@@ -28,6 +28,7 @@ local G2L = {};
 cloneref = cloneref or function(A) return A end
 RunService = cloneref(game:GetService('RunService'))
 HttpService = cloneref(game:GetService('HttpService'))
+ContentProvider = cloneref(game:GetService('ContentProvider'))
 gethui = gethui or function(A) if RunService:IsStudio() then return game.Players.LocalPlayer:WaitForChild('PlayerGui') else return game:GetService('CoreGui') end; end
 get_hidden_gui = get_hidden_gui or function(A) if RunService:IsStudio() then return game.Players.LocalPlayer:WaitForChild('PlayerGui') else return game:GetService('CoreGui') end; end
 writefile = writefile or nil
@@ -1391,6 +1392,19 @@ function Module:Intialize(Title, Image, Opened)
 	LibImage.Image = Image
 	MinimizeLogo.ImageButton.Image = Image
 	LibTitle.Text = Title
+	local ContentReload = {}
+	for i, v in pairs(Holder.Parent:GetDescendants()) do
+		if v:IsA('Sound') then
+			table.insert(ContentReload, v.SoundId)
+		end
+		if v:IsA('ImageLabel') then
+			table.insert(ContentReload, v)
+		end
+		if v:IsA('ImageButton') then
+			table.insert(ContentReload, v)
+		end
+	end
+	ContentProvider:PreloadAsync(ContentReload)
 	local Finished = PlayIntro()
 	repeat task.wait() until Finished == true
 	function Lib:Notify(Title, Description, Duration)
