@@ -25,9 +25,21 @@
 ]]
 
 local G2L = {};
+cloneref = cloneref or function(A) return A end
+RunService = cloneref(game:GetService('RunService'))
+HttpService = cloneref(game:GetService('HttpService'))
+gethui = gethui or function(A) if RunService:IsStudio() then return game.Players.LocalPlayer:WaitForChild('PlayerGui') else return game:GetService('CoreGui') end; end
+get_hidden_gui = get_hidden_gui or function(A) if RunService:IsStudio() then return game.Players.LocalPlayer:WaitForChild('PlayerGui') else return game:GetService('CoreGui') end; end
+writefile = writefile or nil
+readfile = readfile or nil
 
 -- StarterGui.CeltoicLib
-G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+G2L["1"] = cloneref(Instance.new('ScreenGui'));
+if get_hidden_gui or gethui then
+	local hiddenUI = get_hidden_gui or gethui
+	G2L['1'].Name = HttpService:GenerateGUID()
+	G2L['1'].Parent = hiddenUI()
+end
 G2L["1"]["IgnoreGuiInset"] = true;
 G2L["1"]["ScreenInsets"] = Enum.ScreenInsets.DeviceSafeInsets;
 G2L["1"]["Name"] = [[CeltoicLib]];
