@@ -1510,20 +1510,35 @@ function Module:Intialize(Title, Image, Opened)
 				local raw = UIDragDetector.DragUDim2.X.Scale * 2.5
 				local normalized = math.clamp((raw + 1.1) / 2.2, 0, 1)
 				local scaled
-				if typeof(Max) and typeof(Min) == 'number' then
-					scaled = Min + normalized * (Max - Min)
-				end
+				Min = Min or 0
+				Max = Max or 1
+				scaled = Min + normalized * (Max - Min)
 				if scaled or normalized then
 					ValueElement = {UIDragDetector.DragUDim2.X.Scale, UIDragDetector.DragUDim2.X.Offset}
 				end
 				if typeof(Callback) == 'function' then
-					Callback(scaled or normalized)
+					local Ok, Result = pcall(function()
+						Callback(scaled or normalized)
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 				if typeof(Max) == 'function' then
-					Max(scaled or normalized)
+					local Ok, Result = pcall(function()
+						Max(scaled or normalized)
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 				if typeof(Min) == 'function' then
-					Min(scaled or normalized)
+					local Ok, Result = pcall(function()
+						Min(scaled or normalized)
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 			end))
 			NameElement = SliderClone.Name
@@ -1560,7 +1575,12 @@ function Module:Intialize(Title, Image, Opened)
 			end
 			table.insert(Connections, ChangedEvent.Event:Connect(function(Value)
 				Sounds.Click:Play()
-				Callback(Value)
+				local Ok, Result = pcall(function()
+					Callback(Value)
+				end)
+				if not Ok then
+					print(Result)
+				end
 			end))
 			local Prog = false
 			table.insert(Connections, DropdownClone.Activated:Connect(function()
@@ -1619,7 +1639,12 @@ function Module:Intialize(Title, Image, Opened)
 			table.insert(Connections, ButtonClone.Activated:Connect(function()
 				Sounds.Click:Play()
 				if typeof(Callback) == 'function' then
-					Callback()
+					local Ok, Result = pcall(function()
+						Callback()
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 			end))
 		end
@@ -1650,7 +1675,12 @@ function Module:Intialize(Title, Image, Opened)
 				ToggleClone:SetAttribute('Value', Debounce)
 				if typeof(Callback) == 'function' then
 					ValueElement = Debounce
-					Callback(Debounce)
+					local Ok, Result = pcall(function()
+						Callback(Debounce)
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 			end))
 			NameElement = ToggleClone.Name
@@ -1684,7 +1714,12 @@ function Module:Intialize(Title, Image, Opened)
 				if not EnterPressed then return end
 				Sounds.Enter:Play()
 				if typeof(Callback) == 'function' and TextBoxClone.Text then
-					Callback(TextBoxClone.Text)
+					local Ok, Result = pcall(function()
+						Callback(TextBoxClone.Text)
+					end)
+					if not Ok then
+						print(Result)
+					end
 				end
 			end))
 			NameElement = TextBoxClone.Name
